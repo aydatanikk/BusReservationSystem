@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Model.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;BusReservartionSystemmm&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">busreservartionsystemmm</a> &gt; <span class="el_source">Model.java</span></div><h1>Model.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package busreservartionsystemmm;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author Ayda
+ */
+<span class="fc" id="L22">public class Model {</span>
+
+<span class="fc" id="L24">    ArrayList&lt;Bus&gt; busList = new ArrayList&lt;&gt;();</span>
+/*
+    public void writeToFile() {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            File file = new File(&quot;BusText.txt&quot;);
+            if (file.isFile()) {
+                System.out.println(&quot;true&quot;);
+            }
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            PrintWriter out = new PrintWriter(&quot;BusText.txt&quot;);
+            String text = &quot;&quot;;           
+            for (Bus b : busList) {
+                BusSeat[] arr = b.getSeats();
+
+                
+
+                text = text + b.getId() + &quot;;&quot; + b.getName() + &quot;;&quot; + b.getTimeHour() + &quot;;&quot; + b.getTimeMin() + &quot;;&quot; + b.getTo() + &quot;;&quot;
+                        + b.getFrom() + &quot;;&quot; + b.isWireless() + &quot;;&quot; + b.isTv() + &quot;;&quot; + b.getJourneyDate() + &quot;;&quot;
+                        + b.getReturnDate() + &quot;:&quot;;
+                
+
+                sb.append(text);
+            }
+
+            out.write(text);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeToSeatFile(){
+         StringBuilder sb = new StringBuilder();
+
+        try {
+            File file = new File(&quot;SeatText.txt&quot;);
+            if (file.isFile()) {
+                System.out.println(&quot;true&quot;);
+            }
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            PrintWriter out = new PrintWriter(&quot;SeatText.txt&quot;);
+            String text = &quot;&quot;;           
+            for (Bus b : busList) {
+                BusSeat[] arr = b.getSeats();
+                
+                for (int i = 0; i &lt; arr.length; i++) {
+                    if(arr[i].getP()!=null){
+                        Passenger p =arr[i].getP();
+                        text=text+arr[i].isAvailable()+&quot;;&quot;+p.getName()+&quot;;&quot;+p.getSurname()+&quot;;&quot;+p.getId()+&quot;;&quot;+p.getMail()+&quot;:&quot;;
+                    } else{
+                        text=text+arr[i].isAvailable()+&quot;:&quot;;
+                    }
+                    
+                }
+                text=text+&quot;-&quot;;
+                                            
+                sb.append(text);
+            }
+
+            out.write(text);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void readFile() {
+        try {
+            File file = new File(&quot;BusText.txt&quot;);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, &quot;:&quot;);
+                while (st.hasMoreTokens()) {
+                    StringTokenizer st1 = new StringTokenizer(st.nextToken(), &quot;;&quot;);                                   
+                    Bus b = new Bus();
+                    b.setId(Integer.parseInt(st1.nextToken()));
+                    b.setName(st1.nextToken());
+                    b.setTimeHour(Integer.parseInt(st1.nextToken()));
+                    b.setTimeMin(Integer.parseInt(st1.nextToken()));
+                    b.setTo(st1.nextToken());
+                    b.setFrom(st1.nextToken());
+                    if (st1.nextToken().equals(&quot;true&quot;)) {
+                        b.setWireless(true);
+                    } else {
+                        b.setWireless(false);
+                    }
+                    if (st1.nextToken().equals(&quot;true&quot;)) {
+                        b.setTv(true);
+                    } else {
+                        b.setTv(false);
+                    }
+                    b.setJourneyDate(st1.nextToken());
+                    b.setReturnDate(st1.nextToken());                                                           
+                    busList.add(b);
+                }
+            }
+            br.close();
+        } catch (Exception e) {
+        }
+    }
+    
+    public void readSeatFile(){
+         try {
+            File file = new File(&quot;SeatText.txt&quot;);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line = null;
+            int j=0;
+            while ((line = br.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(line, &quot;-&quot;);
+                
+                while (st.hasMoreTokens()) {
+                    int i=0;
+                    BusSeat[] seats= new BusSeat[32];
+                    StringTokenizer st1 = new StringTokenizer(st.nextToken(), &quot;:&quot;);
+                    while(st1.hasMoreTokens()){
+                        StringTokenizer st2 = new StringTokenizer(st1.nextToken(), &quot;;&quot;);
+                            if(st2.nextToken().equals(&quot;true&quot;)){
+                                seats[i].setAvailable(true);
+                            }else{
+                                seats[i].setAvailable(false);
+                            }
+                            i++;
+                    }
+                    busList.get(j).setSeats(seats);
+                   j++;
+                }
+               
+            }
+            br.close();
+        } catch (Exception e) {
+        }
+    }
+    */
+    public boolean buySeat(int busId, int seatId, String name, String surname, int passengerId, String mail) {
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">        for (Bus bus : busList) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (bus.getId() == busId) {</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                if (bus.getSeats()[seatId].isAvailable()) {</span>
+<span class="nc" id="L163">                    Passenger p = new Passenger(name, surname, busId, mail);</span>
+<span class="nc" id="L164">                    bus.getSeats()[seatId].setAvailable(false);</span>
+<span class="nc" id="L165">                    bus.getSeats()[seatId].setP(p);</span>
+                   // writeToFile();
+                   // writeToSeatFile();
+<span class="nc" id="L168">                    return true;</span>
+                }
+            }
+
+<span class="nc" id="L172">        }</span>
+<span class="fc" id="L173">        return false;</span>
+    }
+
+    public Bus getBusWithId(int id) {
+
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        for (Bus bus : busList) {</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            if (bus.getId() == id) {</span>
+<span class="nc" id="L180">                return bus;</span>
+            }
+<span class="nc" id="L182">        }</span>
+<span class="fc" id="L183">        return null;</span>
+    }
+
+    public boolean addBus(int id, String name, int timeHour, int timeMin, String to, String from,
+            boolean wireless, boolean tv, String journeyDate, String returnDate) {
+<span class="fc" id="L188">     Bus bus = new Bus(id, name, timeHour, timeMin, to, from, wireless, tv, journeyDate, returnDate);</span>
+     
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (int i = 0; i &lt; bus.getSeats().length; i++) {</span>
+<span class="fc" id="L191">            BusSeat seat = new BusSeat();</span>
+<span class="fc" id="L192">            seat.setAvailable(true);</span>
+<span class="fc" id="L193">            seat.setP(null);</span>
+<span class="fc" id="L194">            bus.getSeats()[i] = seat;</span>
+        }
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">        if (busList.add(bus)) {</span>
+           // writeToFile();
+           // writeToSeatFile();
+<span class="fc" id="L199">            return true;</span>
+        } else {
+<span class="nc" id="L201">            return false;</span>
+        }
+
+    }
+
+    /**
+     * This method do update.
+     *
+     * @param id
+     * @param name
+     * @param timeHour
+     * @param timeMin
+     * @param to
+     * @param from
+     * @param wireless
+     * @param tv
+     * @param journeyDate
+     * @param returnDate
+     * @return
+     */
+    public boolean updateBus(int id, String name, int timeHour, int timeMin, String to, String from,
+            boolean wireless, boolean tv, String journeyDate, String returnDate) {
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">        for (Bus bus : busList) {</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (bus.getId() == id) {</span>
+<span class="nc" id="L225">                bus.setName(name);</span>
+<span class="nc" id="L226">                bus.setTimeHour(timeHour);</span>
+<span class="nc" id="L227">                bus.setFrom(from);</span>
+<span class="nc" id="L228">                bus.setJourneyDate(journeyDate);</span>
+<span class="nc" id="L229">                bus.setReturnDate(returnDate);</span>
+<span class="nc" id="L230">                bus.setTimeMin(timeMin);</span>
+<span class="nc" id="L231">                bus.setTo(to);</span>
+<span class="nc" id="L232">                bus.setTv(tv);</span>
+<span class="nc" id="L233">                bus.setWireless(wireless);</span>
+<span class="nc" id="L234">                return true;</span>
+            }
+<span class="nc" id="L236">        }</span>
+<span class="fc" id="L237">        return false;</span>
+    }
+
+    /**
+     *delete method
+     * @param id
+     * @return
+     */
+    public boolean deleteBus(int id) {
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        for (Bus bus : busList) {</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">            if (bus.getId() == id) {</span>
+<span class="nc" id="L248">                busList.remove(bus);</span>
+<span class="nc" id="L249">                return true;</span>
+            }
+<span class="nc" id="L251">        }</span>
+<span class="fc" id="L252">        return false;</span>
+    }
+
+    public ArrayList&lt;Bus&gt; getBusList() {
+<span class="nc" id="L256">        return busList;</span>
+    }
+
+    public void setBusList(ArrayList&lt;Bus&gt; busList) {
+<span class="nc" id="L260">        this.busList = busList;</span>
+<span class="nc" id="L261">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>

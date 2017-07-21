@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Controller.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;BusReservartionSystemmm&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">busreservartionsystemmm</a> &gt; <span class="el_source">Controller.java</span></div><h1>Controller.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package busreservartionsystemmm;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Ayda
+ */
+public class Controller {
+
+    public Model m;
+    public View v;
+
+<span class="nc" id="L29">    public Controller(Model m, View w) {</span>
+<span class="nc" id="L30">        this.m = m;</span>
+<span class="nc" id="L31">        this.v = w;</span>
+<span class="nc" id="L32">        this.v.listenerButton(new searchListener());</span>
+<span class="nc" id="L33">        this.v.listeneraddButton(new addListener());</span>
+<span class="nc" id="L34">        this.v.listenerdeleteButton(new deleteListener());</span>
+<span class="nc" id="L35">        this.v.listenerloginButton(new loginListener());</span>
+<span class="nc" id="L36">        this.v.listenerupdateButton(new updateListener());</span>
+<span class="nc" id="L37">        this.v.selectButtonListener(new selectButtonListener());</span>
+
+<span class="nc" id="L39">    }</span>
+
+<span class="nc" id="L41">    class selectButtonListener implements ActionListener {</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L45">            BusView bv = new BusView();</span>
+<span class="nc" id="L46">            bv.setVisible(true);</span>
+<span class="nc" id="L47">            int busId = v.getSelectBusId();</span>
+<span class="nc" id="L48">            Bus b = m.getBusWithId(busId);</span>
+<span class="nc" id="L49">            BusSeat[] seats = b.getSeats();</span>
+<span class="nc" id="L50">            JLabel[] labels = bv.getSeat();</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            for (int i = 0; i &lt; labels.length; i++) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                if (seats[i].isAvailable()) {</span>
+<span class="nc" id="L54">                    labels[i].setForeground(Color.green);</span>
+
+                } else {
+<span class="nc" id="L57">                    labels[i].setForeground(Color.red);</span>
+                }
+
+            }
+<span class="nc" id="L61">            bv.busSelectSeatListener(new ActionListener() {</span>
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L65">                    int seatId = bv.getSeatId();</span>
+<span class="nc" id="L66">                    String name = bv.getPassengerName();</span>
+<span class="nc" id="L67">                    String surname = bv.getPassengerSurname();</span>
+<span class="nc" id="L68">                    String id = bv.getPassengerId();</span>
+<span class="nc" id="L69">                    String mail = bv.getPassengerMail();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                    if (seats[seatId].isAvailable()) {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                        if (m.buySeat(busId, seatId, name, surname, 4, mail)) {</span>
+<span class="nc" id="L72">                            JOptionPane.showMessageDialog(null, &quot;Okey&quot;);</span>
+                            // v.getBusView().setVisible(true);
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                            for (int i = 0; i &lt; labels.length; i++) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                                if (seats[i].isAvailable()) {</span>
+<span class="nc" id="L76">                                    labels[i].setForeground(Color.green);</span>
+
+                                } else {
+<span class="nc" id="L79">                                    labels[i].setForeground(Color.red);</span>
+                                }
+
+                            }
+
+                        }
+
+                    } else {
+<span class="nc" id="L87">                        JOptionPane.showMessageDialog(null, &quot;Please Select Another Seat !&quot;);</span>
+                    }
+
+<span class="nc" id="L90">                }</span>
+            });
+
+<span class="nc" id="L93">        }</span>
+
+    }
+
+<span class="nc" id="L97">    class searchListener implements ActionListener {</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+<span class="nc" id="L102">            String from = v.getFrom();</span>
+<span class="nc" id="L103">            String to = v.getTo();</span>
+<span class="nc" id="L104">            String journey = v.getDateOfJourney();</span>
+<span class="nc" id="L105">            String return1 = v.getDateOfReturn();</span>
+<span class="nc bnc" id="L106" title="All 4 branches missed.">            if (!journey.equals(&quot;NULL&quot;) &amp;&amp; !return1.equals(&quot;NULL&quot;)) {</span>
+<span class="nc" id="L107">                DefaultTableModel table = (DefaultTableModel) v.getSearchTable().getModel();</span>
+<span class="nc" id="L108">                table.setRowCount(0);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                for (int i = 0; i &lt; m.getBusList().size(); i++) {</span>
+<span class="nc" id="L110">                    Bus bus = m.getBusList().get(i);</span>
+<span class="nc bnc" id="L111" title="All 8 branches missed.">                    if (bus.getFrom().equals(from) &amp;&amp; bus.getTo().equals(to) &amp;&amp; bus.getJourneyDate().equals(journey) &amp;&amp; bus.getReturnDate().equals(return1)) {</span>
+<span class="nc" id="L112">                        table.addRow(new Object[]{bus.getId(), bus.getName(), bus.getTimeHour(), bus.getTimeMin(), bus.getFrom(),</span>
+<span class="nc bnc" id="L113" title="All 4 branches missed.">                            bus.getTo(), bus.getJourneyDate(), bus.getReturnDate(), (bus.isWireless() == true) ? &quot;Yes&quot; : &quot;No&quot;, (bus.isTv() == true) ? &quot;Yes&quot; : &quot;No&quot;});</span>
+                    }
+
+                }
+<span class="nc" id="L117">                v.getSearchTable().setModel(table);</span>
+<span class="nc" id="L118">                v.getBusView().setVisible(true);</span>
+<span class="nc" id="L119">                v.getTicketView().setVisible(false);</span>
+<span class="nc" id="L120">                System.out.println(&quot;&quot;);</span>
+
+<span class="nc" id="L122">            } else {</span>
+<span class="nc" id="L123">                JOptionPane.showMessageDialog(null, &quot;Please select date !!&quot;);</span>
+            }
+
+<span class="nc" id="L126">        }</span>
+    }
+
+<span class="nc" id="L129">    class addListener implements ActionListener {</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L133">            DefaultTableModel table = (DefaultTableModel) v.getBusTable().getModel();</span>
+<span class="nc" id="L134">            table.setRowCount(0);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            for (int i = 0; i &lt; m.getBusList().size(); i++) {</span>
+<span class="nc" id="L136">                Bus bus = m.getBusList().get(i);</span>
+
+<span class="nc" id="L138">                table.addRow(new Object[]{bus.getId(), bus.getName(), bus.getTimeHour(), bus.getTimeMin(), bus.getFrom(),</span>
+<span class="nc bnc" id="L139" title="All 4 branches missed.">                    bus.getTo(), bus.getJourneyDate(), bus.getReturnDate(), (bus.isWireless() == true) ? &quot;Yes&quot; : &quot;No&quot;, (bus.isTv() == true) ? &quot;Yes&quot; : &quot;No&quot;});</span>
+
+            }
+<span class="nc" id="L142">            v.getBusTable().setModel(table);</span>
+
+<span class="nc" id="L144">            int id = v.getBusId();</span>
+<span class="nc" id="L145">            String name = v.getBusName();</span>
+<span class="nc" id="L146">            int timeHour = v.getTimeHour();</span>
+<span class="nc" id="L147">            int timeMin = v.getTimeMin();</span>
+<span class="nc" id="L148">            String to = v.getToBus();</span>
+<span class="nc" id="L149">            String from = v.getFromBus();</span>
+<span class="nc" id="L150">            boolean wireless = v.getWireless();</span>
+<span class="nc" id="L151">            boolean tv = v.getTv();</span>
+<span class="nc" id="L152">            String journeyDate = v.getDateOfJourney2();</span>
+<span class="nc" id="L153">            String returnDate = v.getDateOfReturn2();</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">             if( id&lt;=0){</span>
+<span class="nc" id="L155">             JOptionPane.showMessageDialog(null, &quot;Please enter positive number !&quot;);</span>
+         }
+             else{
+                 
+             
+<span class="nc bnc" id="L160" title="All 2 branches missed.">            if (m.addBus(id, name, timeHour, timeMin, to, from, wireless, tv, journeyDate, returnDate)) {</span>
+<span class="nc" id="L161">                JOptionPane.showMessageDialog(null, &quot;SUCCESFULL&quot;);</span>
+<span class="nc" id="L162">                table = (DefaultTableModel) v.getBusTable().getModel();</span>
+<span class="nc" id="L163">                table.setRowCount(0);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                for (int i = 0; i &lt; m.getBusList().size(); i++) {</span>
+<span class="nc" id="L165">                    Bus bus = m.getBusList().get(i);</span>
+<span class="nc" id="L166">                    table.addRow(new Object[]{bus.getId(), bus.getName(), bus.getTimeHour(), bus.getTimeMin(), bus.getFrom(),</span>
+<span class="nc bnc" id="L167" title="All 4 branches missed.">                        bus.getTo(), bus.getJourneyDate(), bus.getReturnDate(), (bus.isWireless() == true) ? &quot;Yes&quot; : &quot;No&quot;, (bus.isTv() == true) ? &quot;Yes&quot; : &quot;No&quot;});</span>
+
+                }
+<span class="nc" id="L170">                v.getBusTable().setModel(table);</span>
+            } else {
+<span class="nc" id="L172">                JOptionPane.showMessageDialog(null, &quot;UNSUCCESFULL&quot;);</span>
+            }
+             }
+<span class="nc" id="L175">        }</span>
+
+    }
+
+<span class="nc" id="L179">    class deleteListener implements ActionListener {</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L183">            int x = v.getDeleteId();</span>
+<span class="nc" id="L184">            boolean delete = m.deleteBus(x);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (x == -1) {</span>
+<span class="nc" id="L186">                JOptionPane.showMessageDialog(null, &quot;Please Select One Row in the Table&quot;);</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">            } else if (delete) {</span>
+<span class="nc" id="L188">                JOptionPane.showMessageDialog(null, &quot;Deleted&quot;);</span>
+<span class="nc" id="L189">                DefaultTableModel table = (DefaultTableModel) v.getBusTable().getModel();</span>
+<span class="nc" id="L190">                table.setRowCount(0);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                for (int i = 0; i &lt; m.getBusList().size(); i++) {</span>
+<span class="nc" id="L192">                    Bus bus = m.getBusList().get(i);</span>
+
+<span class="nc" id="L194">                    table.addRow(new Object[]{bus.getId(), bus.getName(), bus.getTimeHour(), bus.getTimeMin(), bus.getFrom(),</span>
+<span class="nc bnc" id="L195" title="All 4 branches missed.">                        bus.getTo(), bus.getJourneyDate(), bus.getReturnDate(), (bus.isWireless() == true) ? &quot;Yes&quot; : &quot;No&quot;, (bus.isTv() == true) ? &quot;Yes&quot; : &quot;No&quot;});</span>
+
+                }
+<span class="nc" id="L198">                v.getBusTable().setModel(table);</span>
+            }
+
+<span class="nc" id="L201">        }</span>
+
+    }
+
+<span class="nc" id="L205">    class updateListener implements ActionListener {</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L209">            int id = v.getUpdateId();</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (id != -1) {</span>
+<span class="nc" id="L211">                v.getManagerPage().setVisible(false);</span>
+<span class="nc" id="L212">                v.getUpdatePage().setVisible(true);</span>
+            } else {
+<span class="nc" id="L214">                JOptionPane.showMessageDialog(null, &quot;SELECT ROW !!&quot;);</span>
+            }
+
+<span class="nc" id="L217">            v.update_button2Listener(new ActionListener() {</span>
+                @Override
+                public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L220">                    String name = v.getBusNameUpdate();</span>
+<span class="nc" id="L221">                    int timeHour = v.getTimeHourUpdate();</span>
+<span class="nc" id="L222">                    int timeMin = v.getTimeMinUpdate();</span>
+<span class="nc" id="L223">                    String to = v.getToBusUpdate();</span>
+<span class="nc" id="L224">                    String from = v.getFromBusUpdate();</span>
+<span class="nc" id="L225">                    boolean wireless = v.getWirelessUpdate();</span>
+<span class="nc" id="L226">                    boolean tv = v.getTvUpdate();</span>
+<span class="nc" id="L227">                    String journeyDate = v.getDateOfJourney2Update();</span>
+<span class="nc" id="L228">                    String returnDate = v.getDateOfReturn2Update();</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                    if (m.updateBus(id, name, timeHour, timeMin, to, from, wireless, tv, journeyDate, returnDate)) {</span>
+<span class="nc" id="L230">                        JOptionPane.showMessageDialog(null, &quot;SUCCESFULL&quot;);</span>
+<span class="nc" id="L231">                        DefaultTableModel table = (DefaultTableModel) v.getBusTable().getModel();</span>
+<span class="nc" id="L232">                        table.setRowCount(0);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                        for (int i = 0; i &lt; m.getBusList().size(); i++) {</span>
+<span class="nc" id="L234">                            Bus bus = m.getBusList().get(i);</span>
+<span class="nc" id="L235">                            table.addRow(new Object[]{bus.getId(), bus.getName(), bus.getTimeHour(), bus.getTimeMin(), bus.getFrom(),</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">                                bus.getTo(), bus.getJourneyDate(), bus.getReturnDate(), (bus.isWireless() == true) ? &quot;Yes&quot; : &quot;No&quot;, (bus.isTv() == true) ? &quot;Yes&quot; : &quot;No&quot;});</span>
+
+                        }
+<span class="nc" id="L239">                        v.getBusTable().setModel(table);</span>
+<span class="nc" id="L240">                    } else {</span>
+<span class="nc" id="L241">                        JOptionPane.showMessageDialog(null, &quot;UNSUCCESFULL!!!&quot;);</span>
+                    }
+<span class="nc" id="L243">                }</span>
+            });
+
+<span class="nc" id="L246">        }</span>
+    }
+
+<span class="nc" id="L249">    class loginListener implements ActionListener {</span>
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+<span class="nc" id="L253">            String username = v.getUsername();</span>
+<span class="nc" id="L254">            String pass = v.getPassword();</span>
+
+<span class="nc bnc" id="L256" title="All 4 branches missed.">            if (username.equals(&quot;manager&quot;) &amp;&amp; pass.equals(&quot;123&quot;)) {</span>
+<span class="nc" id="L257">                JOptionPane.showMessageDialog(null, &quot;Login True&quot;);</span>
+<span class="nc" id="L258">                DefaultTableModel table = (DefaultTableModel) v.getBusTable().getModel();</span>
+<span class="nc" id="L259">                table.setRowCount(0);</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                for (int i = 0; i &lt; m.getBusList().size(); i++) {</span>
+<span class="nc" id="L261">                    Bus bus = m.getBusList().get(i);</span>
+
+<span class="nc" id="L263">                    table.addRow(new Object[]{bus.getId(), bus.getName(), bus.getTimeHour(), bus.getTimeMin(), bus.getFrom(),</span>
+<span class="nc bnc" id="L264" title="All 4 branches missed.">                        bus.getTo(), bus.getJourneyDate(), bus.getReturnDate(), (bus.isWireless() == true) ? &quot;Yes&quot; : &quot;No&quot;, (bus.isTv() == true) ? &quot;Yes&quot; : &quot;No&quot;});</span>
+
+                }
+<span class="nc" id="L267">                v.getBusTable().setModel(table);</span>
+<span class="nc" id="L268">                v.getManagerLogin().setVisible(false);</span>
+<span class="nc" id="L269">                v.getManagerPage().setVisible(true);</span>
+
+<span class="nc" id="L271">            } else {</span>
+<span class="nc" id="L272">                JOptionPane.showMessageDialog(null, &quot;Login False Try Again !&quot;);</span>
+            }
+<span class="nc" id="L274">        }</span>
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
